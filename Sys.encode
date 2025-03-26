@@ -1,0 +1,23 @@
+function Sys.encode 1
+push argument 0
+call Sys.computeParity 1
+pop local 0
+
+push argument 0
+push constant 32767
+and
+pop argument 0
+
+push local 0
+push constant 1
+eq
+if-goto SET_MSB
+
+push argument 0
+return
+
+label SET_MSB
+push argument 0
+push constant 32768
+or
+return
