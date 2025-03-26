@@ -1,51 +1,48 @@
 function Sys.xor 0
-push argument 1
 push argument 0
-and
+push argument 1
 not
+and
 push argument 1
 push argument 0
-or
+not
 and
+or
 return
 
 function Sys.shiftLeft 2
-push constant 0
-pop local 0
 push argument 0
+pop local 0
+push constant 0
 pop local 1
 
 label SHIFT_LOOP
-push local 0
+push local 1
 push argument 1
 eq
 if-goto END_SHIFT
 
-push local 1
-push local 1
-add
-pop local 1
-
 push local 0
-push constant 1
+push local 0
 add
 pop local 0
+
+push local 1
+push constant 1
+add
+pop local 1
 
 goto SHIFT_LOOP
 
 label END_SHIFT
-push local 1
+push local 0
 return
 
-function Sys.computeParity 3
+function Sys.computeParity 2
 push constant 0
 pop local 0
 push constant 0
 pop local 1
-push argument 0
-push constant 32767
-and
-pop local 2
 
 label PARITY_LOOP
 push local 0
@@ -56,7 +53,7 @@ if-goto END_PARITY
 push constant 1
 push local 0
 call Sys.shiftLeft 2
-push local 2
+push argument 0
 and
 push constant 0
 eq
@@ -96,12 +93,12 @@ pop argument 0
 push local 0
 push constant 1
 eq
-if-goto SET_MSB
+if-goto SET_PARITY
 
 push argument 0
 return
 
-label SET_MSB
+label SET_PARITY
 push argument 0
 push constant 32768
 or
