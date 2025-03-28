@@ -1,13 +1,9 @@
 function Sys.xor 2
 push argument 0
-pop local 0
 push argument 1
-pop local 1
-push local 0
-push local 1
 or
-push local 0
-push local 1
+push argument 0
+push argument 1
 and
 not
 and
@@ -17,20 +13,17 @@ function Sys.shiftLeft 2
 push argument 0
 pop local 0
 push argument 1
-pop local 1
 label shift_iteration
-push local 1
 push constant 0
 eq
 if-goto shift_complete
 push local 0
-push local 0
 add
 pop local 0
-push local 1
+push argument 1
 push constant 1
 sub
-pop local 1
+pop argument 1
 goto shift_iteration
 label shift_complete
 push local 0
@@ -76,15 +69,11 @@ if-goto parity_calculated
 push constant 1
 push local 2
 call Sys.shiftLeft 2
-pop local 3
 push local 0
-push local 3
 and
-pop local 4
-push local 4
-push constant 0
-eq
-if-goto skip_flip
+if-goto flip_parity
+goto skip_flip
+label flip_parity
 push local 1
 push constant 1
 call Sys.xor 2
@@ -102,10 +91,6 @@ return
 function Sys.encode 2
 push argument 0
 call Sys.computeParity 1
-pop local 0
-push local 0
-push constant 1
-eq
 if-goto set_parity_bit
 push argument 0
 push constant 32767
@@ -115,9 +100,7 @@ label set_parity_bit
 push constant 1
 push constant 15
 call Sys.shiftLeft 2
-pop local 1
 push argument 0
-push local 1
 or
 return
 
