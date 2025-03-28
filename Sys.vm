@@ -1,80 +1,91 @@
-function Sys.xor 0
-pop temp1
-pop temp2
+function Sys.xor 2
+push argument 0
+pop local 0
+push argument 1
+pop local 1
+push local 0
+push local 1
 not
-push temp1
 and
-push temp2
-push temp1
+push local 0
 not
+push local 1
 and
 or
 return
 
 function Sys.shiftLeft 2
-pop argument 1
-pop argument 0
-label SHIFT_LOOP
+push argument 0
+pop local 0
 push argument 1
+pop local 1
+label shift_loop
+push local 1
 push constant 0
 eq
-if-goto END_SHIFT
-push argument 0
-add argument 0
-pop argument 0
-push argument 1
+if-goto shift_complete
+push local 0
+push local 0
+add
+pop local 0
+push local 1
 push constant 1
 sub
-pop argument 1
-goto SHIFT_LOOP
-label END_SHIFT
-push argument 0
+pop local 1
+goto shift_loop
+label shift_complete
+push local 0
 return
 
-function Sys.computeParity 3
-pop argument 0
-push constant 0
+function Sys.computeParity 4
+push argument 0
 pop local 0
 push constant 0
 pop local 1
-label PARITY_LOOP
-push local 1
+push constant 0
+pop local 2
+label parity_check
+push local 2
 push constant 15
 eq
-if-goto END_PARITY
+if-goto parity_finished
 push constant 1
-push local 1
-call Sys.shiftLeft 2
-pop local 2
-push argument 0
 push local 2
+call Sys.shiftLeft 2
+pop local 3
+push local 0
+push local 3
 and
 push constant 0
 eq
-if-goto NO_XOR
-push local 0
-push constant 1
-call Sys.xor 2
-pop local 0
-label NO_XOR
+not
+if-goto toggle_parity
+goto next_bit
+label toggle_parity
 push local 1
 push constant 1
-add
+call Sys.xor 2
 pop local 1
-goto PARITY_LOOP
-label END_PARITY
-push local 0
+label next_bit
+push local 2
+push constant 1
+add
+pop local 2
+goto parity_check
+label parity_finished
+push local 1
 return
 
-function Sys.encode 1
-pop argument 0
+function Sys.encode 2
 push argument 0
-call Sys.computeParity 1
 pop local 0
-push argument 0
+push local 0
+call Sys.computeParity 1
+pop local 1
+push local 0
 push constant 32767
 and
-push local 0
+push local 1
 push constant 15
 call Sys.shiftLeft 2
 or
